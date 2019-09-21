@@ -1,8 +1,12 @@
-	;; mbr.asm - A simple x86 bootloader example.
-	;;
-	;; In worship to the seven hacker gods and for the honor 
-	;; of source code realm, we hereby humbly offer our sacred 
-	;; "Hello World" sacrifice. May our code remain bugless.
+
+
+
+
+; reservando 9 bytes, uma pra cada posição do tabuleiro
+section .data
+	posicoes times 9 db 1 
+
+
 
 	
 	org 0x7c00		; Our load address
@@ -24,8 +28,8 @@ end:				; Jump forever (same as jmp end)
 
 here:				; C-like NULL terminated string
 
-	db 'Hello world!', 0xd, 0xa, 0x0
-	
+	db 'Aperte um dos numeros de 1 a 9 para selecionar a posicao desejada do tabuleiro', 0xd, 0xa, 0x0
+
 	times 510 - ($-$$) db 0	; Pad with zeros
 	dw 0xaa55		; Boot signature
 
