@@ -31,7 +31,7 @@ func_imprime_str:			; Sub rotina responsavel pela impressao da mensagem desejada
 		
 		pop bx
 		pop al
-		;;nao sei como retornar (;-;)
+		ret
 
 end:				; Jump forever (same as jmp end)
 	jmp $
