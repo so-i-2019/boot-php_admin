@@ -27,13 +27,11 @@ func_verifica:				; Sub rotina responsavel pela verificacao de fim de jogo, se h
 	
 
 func_imprime_str:			; Sub rotina responsavel pela impressao da mensagem desejada -> parametros em bx: endereco da string desejada
-	push ax
-	push bx 
+	push ax 
 
 	func_imprime_str_loop:	; Loop da funcao de imprime string (enquanto nao achar o caracter \0)
 		
 		mov al, [bx]
-
 		int 0x10
 		cmp al, 0x0
 		je func_imprime_str_exit 		
@@ -42,7 +40,6 @@ func_imprime_str:			; Sub rotina responsavel pela impressao da mensagem desejada
 
 	func_imprime_str_exit:	; Desempilha e retorna da funcao
 		
-		pop bx
 		pop ax
 		ret
 
