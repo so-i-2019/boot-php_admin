@@ -1,33 +1,55 @@
-	;; mbr.asm - A simple x86 bootloader example.
-	;;
-	;; In worship to the seven hacker gods and for the honor 
-	;; of source code realm, we hereby humbly offer our sacred 
-	;; "Hello World" sacrifice. May our code remain bugless.
+[bits 16]    ; use 16 bits
+[org 0x7c00] ; sets the start address
 
-bits 16
-	
-	org 0x7c00		; Our load address
-
-	mov ah, 0xe		; Configure BIOS teletype mode
-
-	mov bx, 0		; May be 0 because org directive.
-
-loop_principal:				; Logica principal do jogo
+menu: 
 	mov bx, msg_instrucao
 	call func_imprime_str
-
-	mov bx, msg_vencedorx
-	call func_imprime_str	
-
-	mov bx, msg_vencedoro
+	mov bx, msg_opcao_1
 	call func_imprime_str
-	jmp end
+	mov bx, msg_opcao_2
+	call func_imprime_str
+	mov bx, msg_opcao_3
+	call func_imprime_str
+	mov bx, msg_opcao_4
+	call func_imprime_str
+	mov bx, msg_opcao_0
+	call func_imprime_str
 
-func_verifica:				; Sub rotina responsavel pela verificacao de fim de jogo, se houve vencedor e qual tambem
-	
+	mov ah, 0x0
+	int 0x16
+
+	cmp al, 48	 ;('0') Se fim do programa
+	je end
+
+op_soma:
+	cmp al, 49   ;('1') Se funcao desejada soma
+	jne op_subtracao
+	call soma
+	jmp menu
+op_subtracao:
+	cmp al, 50
+	jne op_multiplicacao
+	call subtracao
+	jmp menu
+op_multiplicacao:
+	cmp al, 51
+	jne op_divisao
+	call multiplicacao
+	jmp menu
+op_divisao:
+	cmp al, 52
+	jne menu
+	call divisao
+	jmp menu
+end:				; Jump forever 
+	jmp $
+
+
 
 func_imprime_str:			; Sub rotina responsavel pela impressao da mensagem desejada -> parametros em bx: endereco da string desejada
 	push ax 
+
+	mov ah, 0x0e
 
 	func_imprime_str_loop:	; Loop da funcao de imprime string (enquanto nao achar o caracter \0)
 		
@@ -38,31 +60,44 @@ func_imprime_str:			; Sub rotina responsavel pela impressao da mensagem desejada
 		inc bx
 		jmp func_imprime_str_loop
 
-	func_imprime_str_exit:	; Desempilha e retorna da funcao
+func_imprime_str_exit:	; Desempilha e retorna da funcao
 		
-		pop ax
-		ret
+	pop ax
+	ret
 
-end:				; Jump forever (same as jmp end)
-	jmp $
+soma:
+
+	ret
+
+subtracao:
+
+	push bx
+
+	mov bx, msg_debug
+	call func_imprime_str
+
+	pop bx
+
+	ret
+
+multiplicacao:
+	ret
+
+divisao:
+	ret
 
 
-;; Mensagens do jogo (Strings semelhantes as em C);;
-msg_instrucao: db 'Aperte um dos numeros de 1 a 9 para selecionar a posicao desejada do tabuleiro', 0xd, 0xa, 0x0
-msg_vezx: db 'Vez de X', 0xd, 0xa, 0x0
-msg_vezo: db 'Vez de O', 0xd, 0xa, 0x0
-msg_empate: db 'Empate: deu velha...', 0xd, 0xa, 0x0
-msg_vencedorx: db "X venceu!", 0xd, 0xa, 0x0
-msg_vencedoro: db "Y venceu!", 0xd, 0xa, 0x0
-	
-	times 510 - ($-$$) db 0	; Pad with zeros
-	dw 0xaa55		; Boot signature
 
-;; Vetor de posicoes: tabuleiro do jogo, armazena as pecas
-section .data
-	posicoes times 9 db 0
 
-;; VALORES DAS POSICOES DO VETOR:
-;; ' ': posicao vazia
-;; 'X': preenchido por X
-;; 'O': preenchido por O
+;;Mensagens da calculadora
+msg_instrucao: db 'Aperte um dos numeros de 0 a 9 para selecionar a operacao desejada', 0xd, 0xa, 0x0
+msg_opcao_1: db '1 - Soma', 0xd, 0xa, 0x0
+msg_opcao_2: db '2 - Subtracao', 0xd, 0xa, 0x0
+msg_opcao_3: db '3 - Multiplicacao', 0xd, 0xa, 0x0
+msg_opcao_4: db '4 - Divisao', 0xd, 0xa, 0x0
+msg_opcao_0: db '0 - Sair', 0xd, 0xa, 0x0
+
+msg_debug: db 'Its a me', 0xd, 0xa, 0x0
+
+times 510-($-$$) db 0           ; fill the output file with zeroes until 510 bytes are full
+dw 0xaa55                       ; magic number that tells the BIOS this is bootable
