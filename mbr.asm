@@ -64,6 +64,50 @@ func_imprime_str_exit:	; Desempilha e retorna da funcao
 		
 	pop ax
 	ret
+	
+printNum: ; ax chega com o valor a ser mostrado
+	push ax
+	push bx
+	push cx
+	push dx
+
+	mov cx, 0x00
+	mov bx, 0x0a
+
+	loop1PrintNum:
+		mov dx, 0x00 ; o número pra ser dividido tá com a parte high em dx e a low em ax, por isso tem q resetar dx
+		div bx ; dividindo ax/bx
+
+		inc cx ; pra saber quantos números tem dentro do númeor de vdd, pra saber quantas vezes desempilhar
+
+		push dx ; guarda resto na pilha
+
+		cmp ax, 0x0a ; ax tá com o quociente
+		jge loop1PrintNum ; se o quociente for maior igual a 10 volta pro loop
+		
+		;print número mais significativo
+	 	add al, 48
+	 	mov ah, 0x0e
+	 	int 0x10		
+
+		loop2PrintNum:
+			pop ax
+			dec cx
+
+			add al, 48
+			mov ah, 0x0e
+			int 0x10
+			
+			cmp cx, 0x00
+			jnz loop2PrintNum
+
+			push ax
+			push bx
+			push cx
+			push dx
+	
+			ret
+	
 
 soma:
 
