@@ -1,3 +1,9 @@
+;; Copyright (c) 2019 - Marcelo Isaias de Moraes Junior - marcelo.junior@usp.br e Witor Matheus Alves de Oliveira - witor.mao@usp.br	
+	;;
+	;; This is free software and distributed under GNU GPL vr.3. Please 
+	;; refer to the companion file LICENSING or to the online documentation
+	;; at https://www.gnu.org/licenses/gpl-3.0.txt for further information.
+	
 [bits 16]    ; use 16 bits
 [org 0x7c00] ; sets the start address
 
