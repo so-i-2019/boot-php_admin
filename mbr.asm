@@ -76,6 +76,36 @@ func_imprime_str_exit:	; Desempilha e retorna da funcao
 	ret
 
 
+leituraNum:
+  push bx
+  push cx
+  push dx
+
+  mov bx, 0
+
+  mov ah, 0x00   ; lê caractere da entrada 
+  int 0x16
+
+  cmp al, 0x0d  ; se for enter termina a leitura
+  je fimLeitura
+
+  sub al, 48  
+  mov ah, 0   
+
+  imul bx, 10 ; mutiplicando pela  potência de 10 correspondente ao algarismo
+  add bx, ax 
+
+  jmp leituraNum
+
+fimLeitura:
+   mov ax, bx ; guarda o valor em operando1
+
+   pop dx
+   pop cx
+   pop bx 
+
+   ret
+
 
 
 
