@@ -235,3 +235,7 @@ oper2: dw 0x0
 
 times 510-($-$$) db 0           ; fill the output file with zeroes until 510 bytes are full
 dw 0xaa55                       ; magic number that tells the BIOS this is bootable
+
+;; O programa consiste em uma calculadora simples de adicao e subtracao de dois operandos sem numeros negativos e nem resultados negativos.
+;; Alem disso, nao ha tratamento de overflow, dado tamanho necessario de apenas 512 bytes e operar no limite da memoria.
+;; Este programa ocupa quase todo o espaço permitido, pois implementa duas funcoes complexa, de leitura e impressao de numeros inteiros 
