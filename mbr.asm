@@ -2,34 +2,52 @@
 [org 0x7c00] ; sets the start address
 
 menu: 
+	;mov sp, 0x8000
+	;;mov ss, 0
+
+
 	mov si, msg_instrucao
 	call func_imprime_str
 	mov si, msg_opcao_1
 	call func_imprime_str
 	mov si, msg_opcao_2
 	call func_imprime_str
-	mov si, msg_opcao_3
-	call func_imprime_str
-	mov si, msg_opcao_4
-	call func_imprime_str
 	mov si, msg_opcao_0
 	call func_imprime_str
 
-	mov ax, 52
-	mov [oper1], ax
-	;call printNum
-
-	mov ax, 42
-	mov [oper2], ax
-	;call printNum
-
-
-	mov al, 0x0
+	; leitura  da opçao
+	mov ah, 0x0
 	int 0x16
 
-;;;;;;;;;;;;;;;;;;; OPCOES DE OPERACOES;;;;;;;;;;;;;;;;
 	cmp al, 48	 ;('0') Se fim do programa
 	je end
+
+	mov bx, ax
+
+	mov si, msg_entrada1
+	call func_imprime_str
+
+	call funcLeituraNum
+	mov [oper1], ax ; numero lido tá em ax dps da função
+	call printNum
+
+	mov si, msg_newline
+	call func_imprime_str
+
+	mov si, msg_entrada2
+	call func_imprime_str
+
+	call funcLeituraNum
+	mov [oper2], ax 
+	call printNum
+
+	mov si, msg_newline
+	call func_imprime_str
+
+    mov ax, bx
+
+;;;;;;;;;;;;;;;;;;; OPCOES DE OPERACOES;;;;;;;;;;;;;;;;
+	
 
 op_soma:
 	cmp al, 49   ;('1') Se funcao desejada soma
@@ -38,19 +56,10 @@ op_soma:
 	jmp menu
 op_subtracao:
 	cmp al, 50
-	jne op_multiplicacao
+	jne menu
 	call subtracao
 	jmp menu
-op_multiplicacao:
-	cmp al, 51
-	jne op_divisao
-	call multiplicacao
-	jmp menu
-op_divisao:
-	cmp al, 52
-	jne menu
-	call divisao
-	jmp menu
+
 end:				; Jump forever 
 	jmp $
 
@@ -76,13 +85,14 @@ func_imprime_str_exit:	; Desempilha e retorna da funcao
 	ret
 
 
-leituraNum:
+funcLeituraNum:
   push bx
   push cx
   push dx
 
   mov bx, 0
 
+  leituraNum:
   mov ah, 0x00   ; lê caractere da entrada 
   int 0x16
 
@@ -97,16 +107,14 @@ leituraNum:
 
   jmp leituraNum
 
-fimLeitura:
-   mov ax, bx ; guarda o valor em operando1
+	fimLeitura:
+	   mov ax, bx ; guarda o valor em operando1
 
-   pop dx
-   pop cx
-   pop bx 
+	   pop dx
+	   pop cx
+	   pop bx 
 
-   ret
-
-
+	   ret
 
 
 printNum: ; ax chega com o valor a ser mostrado
@@ -171,7 +179,7 @@ soma:
 
 	mov si, msg_newline
 	call func_imprime_str 		; Pula a linha
-	
+
 	pop si
 	pop bx
 	pop ax
@@ -202,29 +210,17 @@ subtracao:
 	ret
 
 
-multiplicacao:
-
-	ret
-
-divisao:
-	ret
-
-
-
 ;;Mensagens da calculadora
-msg_instrucao: db 'Aperte um dos numeros de 0 a 9 para selecionar a operacao desejada',0xd, 0xa, 0x0
+msg_instrucao: db 'Aperte um dos numeros de 0 a 2 para selecionar a operacao desejada',0xd, 0xa, 0x0
+msg_entrada1: db 'Digite o operando 1, depois aperte enter', 0xd, 0xa, 0x0
+msg_entrada2: db 'Digite o operando 2, depois aperte enter', 0xd, 0xa, 0x0
 msg_opcao_1: db '1 - Soma', 0xd, 0xa, 0x0
 msg_opcao_2: db '2 - Subtracao', 0xd, 0xa, 0x0
-msg_opcao_3: db '3 - Multiplicacao', 0xd, 0xa, 0x0
-msg_opcao_4: db '4 - Divisao', 0xd, 0xa, 0x0
 msg_opcao_0: db '0 - Sair', 0xd, 0xa, 0x0
 
 msg_soma: db 'Resultado da soma: ', 0x0
 msg_sub: db 'Resultado da subtracao: ', 0x0
-msg_mult: db 'Resultado da multiplicacao: ', 0x0
-msg_div: db 'Resultado da divisao: ', 0x0
 
-msg_debug: db 'Its a me', 0xd, 0xa, 0x0
 msg_newline: db 0xd, 0xa, 0x0
 
 oper1: dw 0x0
