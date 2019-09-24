@@ -239,3 +239,5 @@ dw 0xaa55                       ; magic number that tells the BIOS this is boota
 ;; O programa consiste em uma calculadora simples de adicao e subtracao de dois operandos sem numeros negativos e nem resultados negativos.
 ;; Alem disso, nao ha tratamento de overflow, dado tamanho necessario de apenas 512 bytes e operar no limite da memoria.
 ;; Este programa ocupa quase todo o espaço permitido, pois implementa duas funcoes complexa, de leitura e impressao de numeros inteiros 
+;; -- References:
+;; https://stackoverflow.com/questions/48008606/reading-integers-9-in-x86-assembly
